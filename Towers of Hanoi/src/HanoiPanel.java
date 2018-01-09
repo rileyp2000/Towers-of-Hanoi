@@ -49,7 +49,7 @@ public class HanoiPanel extends JComponent implements Runnable
 	private DiskStack[] needles = new DiskStack[NUM_NEEDLES];
 	
 	// Controls whether text trace should be displayed
-	private boolean printing = true;
+	private boolean printing = false;
 	
 	/**
 	 * Create a panel displaying the Towers of Hanoi
@@ -95,13 +95,26 @@ public class HanoiPanel extends JComponent implements Runnable
 	{
 		try {
 			Thread.sleep(2*delay);
-			recHanoi(numberOfDisks, needles[0], needles[2], needles[1]);
+			recHanoi(numberOfDisks, needles[0], needles[2], needles[1], "1","3","2");
+			//moveHanoi(numberOfDisks, needles[0], needles[2], needles[1]);
 		} catch (InterruptedException e) {
 			// Just return
 		}
 		
 	}
 	
+	private void moveHanoi(int numDisks, DiskStack first, DiskStack last, DiskStack helper) throws InterruptedException {
+		moveDisk(first, last);
+		moveDisk(first, helper);
+		moveDisk(last, helper);
+		moveDisk(first, last);
+		moveDisk(helper, first);
+		moveDisk(helper,last);
+		moveDisk(first, last);
+		moveDisk(last, first);
+		moveDisk(last, helper);
+		moveDisk(first, last);
+	}
 	/**
 	 * Recursively solves puzzle.  Moves all but the bottom disk from the first to last needle.
 	 * Then moves the bottom disk.  Then moves the pile first moved to be on top of the bottom 
@@ -115,8 +128,25 @@ public class HanoiPanel extends JComponent implements Runnable
 	 * @param helper needle to put top n-1 disks on
 	 * @throws InterruptedException if the animation is interrupted
 	 */
-	private void recHanoi (int numDisks, DiskStack first, DiskStack last, DiskStack helper) throws InterruptedException
+	private void recHanoi (int numDisks, DiskStack first, DiskStack last, DiskStack helper, String fTower, String lTower, String hTower) throws InterruptedException
 	{
+		//System.out.println("In Hanoi: first: " + fTower +", last: " + lTower + ", helper: " + hTower);
+		if(numDisks == 1)
+			
+			moveDisk(first,last);
+		else{
+			System.out.println("First Call: Moving from " + fTower + " to " + lTower);
+			recHanoi(numDisks-1, first, helper, last, fTower, hTower, lTower);
+			
+			System.out.println("Middle Call: Moving last disk from " + fTower + " to " + lTower);
+			moveDisk(first, last);
+			
+			System.out.println("Last Call: Moving " + (numDisks - 1) + " Disks from " + hTower + " to " + lTower);
+			recHanoi(numDisks-1, helper, last, first, hTower, lTower, fTower);
+			
+		}
+			
+		
 		// Base case.  Simply move the 1 disk
 	   // Move top n-1 disks to the helper needle
    	// Move the bottom disk

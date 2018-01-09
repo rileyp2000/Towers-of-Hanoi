@@ -31,7 +31,7 @@ public class Hanoi extends JPanel implements ActionListener, ChangeListener {
 	private JButton startButton;
 
 	// number of disks currently in use
-	private int numDisks = 5; 
+	private int numDisks = 3; 
 
 	// The object that displays and animates the game
 	private HanoiPanel game = new HanoiPanel(numDisks, WINDOW_SIZE, BASELINE);
